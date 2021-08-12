@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
   has_secure_password
   has_many :tweets
 
+  validates :email, uniqueness: true
+  validates :username, uniqueness: true
+
   def slug
     username.downcase.gsub(" ", "-")
   end

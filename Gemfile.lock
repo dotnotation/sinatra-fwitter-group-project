@@ -29,6 +29,7 @@ GEM
     daemons (1.3.1)
     database_cleaner (1.7.0)
     diff-lcs (1.3)
+    dotenv (2.7.6)
     eventmachine (1.2.7)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
@@ -44,6 +45,8 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (4.0.1)
     rack (2.2.3)
+    rack-flash3 (1.0.5)
+      rack
     rack-protection (2.0.7)
       rack
     rack-test (1.1.0)
@@ -108,7 +111,9 @@ DEPENDENCIES
   bcrypt
   capybara
   database_cleaner
+  dotenv (~> 2.7)
   pry
+  rack-flash3 (~> 1.0)
   rack-test
   rake
   require_all
@@ -121,4 +126,4 @@ DEPENDENCIES
   tux
 
 BUNDLED WITH
-   2.0.2
+   2.2.17
