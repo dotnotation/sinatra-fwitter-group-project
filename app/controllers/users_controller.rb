@@ -4,18 +4,17 @@ class UsersController < ApplicationController
         # redirects to twitter index
         # does not allow sign up without username, email, password
         # does not allow logged in user to view signup page
-        redirect_if_logged_in
-        erb :'users/create_user'
-        # if !logged_in
-        #     erb :'/users/create_user'
-        # else
-        #     redirect to "/tweets"
-        # end
+        
+        if !logged_in?
+            erb :'users/create_user'
+        else
+            redirect to "/tweets"
+        end
     end
 
     post '/signup' do
         # log in user and add user_id to session hash
-        redirect_if_logged_in
+        #redirect_if_logged_in
         user = User.new(params[:user])
         if user.save
             session[:user_id] = user.id
@@ -28,13 +27,17 @@ class UsersController < ApplicationController
     get '/login' do
         # redirects to tweet index
         # does not allow user to see login page if logged in
-        redirect_if_logged_in
-        erb :'users/login'
+        #redirect_if_logged_in
+        if !logged_in?
+            erb :'users/login'
+        else
+            redirect to "/tweets"
+        end
     end
 
     post '/login' do
         # log in user and add user_id to session hash
-        redirect_if_logged_in
+        #redirect_if_logged_in
 
         user = User.find_by(username: params[:user][:username])
 

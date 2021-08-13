@@ -2,10 +2,13 @@ class TweetsController < ApplicationController
 
     get '/tweets' do
         # redirects to login if user isn't logged in 
-        redirect_if_not_logged_in
-        
-        @tweets = Tweet.all
-        erb :'tweets/tweets'
+        #redirect_if_not_logged_in
+        if logged_in?
+            @tweets = Tweet.all
+            erb :'tweets/tweets'
+        else
+            redirect to "/login"
+        end
     end
 
     post '/tweets' do
@@ -13,7 +16,7 @@ class TweetsController < ApplicationController
         # can't post a blank tweet
         redirect_if_not_logged_in
         @tweet = current_user.tweets.build(content: params[:content])
-
+        #binding.pry
         if @tweet.save
             redirect to "/tweets/#{@tweet.id}"
         else
@@ -31,23 +34,33 @@ class TweetsController < ApplicationController
 
     get '/tweets/:id' do
         # user has to be logged in 
-        redirect_if_not_logged_in
-        redirect_if_not_authorized
+        #redirect_if_not_logged_in
+        #redirect_if_not_authorized
+        if logged_in?
+            @tweet = Tweet.find_by_id(params[:id])
         
-        @tweet = Tweet.find_by_id(params[:id])
-        
-        erb :'tweets/show_tweet'
+            erb :'tweets/show_tweet'
+        else
+            redirect to "/login"
+        end
     end
 
     get '/tweets/:id/edit' do
         # user has to be logged in and has to be their tweet
         # can not edit blank content
-        redirect_if_not_logged_in
-        redirect_if_not_authorized
-        
-        @tweet = Tweet.find_by_id(params[:id])
-        
-        erb :'tweets/edit_tweet'
+        #binding.pry
+        #redirect_if_not_logged_in
+        #redirect_if_not_authorized
+        if logged_in?
+            @tweet = Tweet.find_by_id(params[:id])
+            if @tweet.user_id == session[:user_id]
+                erb :'tweets/edit_tweet'
+            else 
+                redirect to "/tweets"
+            end
+        else
+            redirect to "/login"
+        end
     end
 
     patch '/tweets/:id' do
