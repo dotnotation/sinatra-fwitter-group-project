@@ -56,7 +56,9 @@ class TweetsController < ApplicationController
         redirect_if_not_logged_in
         redirect_if_not_authorized
 
-        if @tweet.update(params[:tweet])
+        @tweet = Tweet.find_by_id(params[:id])
+
+        if @tweet.update(content: params[:content])
             redirect to "/tweets/#{@tweet.id}"
         else
             redirect to "/tweets/#{@tweet.id}/edit"
@@ -68,9 +70,9 @@ class TweetsController < ApplicationController
         redirect_if_not_logged_in
         redirect_if_not_authorized
         @tweet = Tweet.find_by_id(params[:id])
-        @tweet.delete
+        @tweet.destroy
 
-        redirect to "/users/:slug"
+        redirect to "/tweets"
     end
 
     private
