@@ -40,7 +40,7 @@ class UsersController < ApplicationController
 
         if user && user.authenticate(params[:user][:password])
             session[:user_id] = user.id
-            redirect_if_logged_in
+            redirect to "/tweets"
         else
             redirect to "/login"
         end

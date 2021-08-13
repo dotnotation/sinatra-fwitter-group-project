@@ -2,12 +2,10 @@ class TweetsController < ApplicationController
 
     get '/tweets' do
         # redirects to login if user isn't logged in 
-        if logged_in?
-            @tweets = Tweet.all
-            erb :'tweets/tweets'
-        else
-            redirect_if_not_logged_in
-        end
+        redirect_if_not_logged_in
+        
+        @tweets = Tweet.all
+        erb :'tweets/tweets'
     end
 
     post '/tweets' do
