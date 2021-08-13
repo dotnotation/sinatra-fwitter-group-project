@@ -4,7 +4,7 @@ class TweetsController < ApplicationController
         # redirects to login if user isn't logged in 
         if logged_in?
             @tweets = Tweet.all
-            erb :'/tweets/tweets'
+            erb :'tweets/tweets'
         else
             redirect_if_not_logged_in
         end
@@ -19,7 +19,7 @@ class TweetsController < ApplicationController
         if @tweet.save
             redirect to "/tweets/#{@tweet.id}"
         else
-            redirect "/tweets/new"
+            redirect to "/tweets/new"
         end
     end
 
@@ -28,7 +28,7 @@ class TweetsController < ApplicationController
         # can't post a blank tweet
         redirect_if_not_logged_in
 
-        erb :'/tweets/new'
+        erb :'tweets/new'
     end
 
     get '/tweets/:id' do
@@ -38,7 +38,7 @@ class TweetsController < ApplicationController
         
         @tweet = Tweet.find_by_id(params[:id])
         
-        erb :'/tweets/show_tweet'
+        erb :'tweets/show_tweet'
     end
 
     get '/tweets/:id/edit' do
@@ -47,7 +47,9 @@ class TweetsController < ApplicationController
         redirect_if_not_logged_in
         redirect_if_not_authorized
         
-        erb :'/tweets/edit_tweet'
+        @tweet = Tweet.find_by_id(params[:id])
+        
+        erb :'tweets/edit_tweet'
     end
 
     patch '/tweets/:id' do
@@ -63,6 +65,12 @@ class TweetsController < ApplicationController
 
     delete '/tweets/:id/delete' do
         # user has to be logged in and has to be their tweet
+        redirect_if_not_logged_in
+        redirect_if_not_authorized
+        @tweet = Tweet.find_by_id(params[:id])
+        @tweet.delete
+
+        redirect to "/users/:slug"
     end
 
     private
