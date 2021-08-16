@@ -27,9 +27,14 @@ class TweetsController < ApplicationController
     get '/tweets/new' do
         # only accessible if logged in 
         # can't post a blank tweet
-        redirect_if_not_logged_in
+        #redirect_if_not_logged_in
+        if logged_in?
+            erb :'/tweets/new'
+        else
+            redirect to '/login'
+        end
 
-        erb :'tweets/new'
+        #erb :'tweets/new'
     end
 
     get '/tweets/:id' do

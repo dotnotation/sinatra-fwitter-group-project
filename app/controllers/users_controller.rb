@@ -15,13 +15,23 @@ class UsersController < ApplicationController
     post '/signup' do
         # log in user and add user_id to session hash
         #redirect_if_logged_in
-        user = User.new(params[:user])
-        if user.save
-            session[:user_id] = user.id
-            redirect to "/tweets"
-        else
-            redirect to "/signup"
+        # user = User.new(params[:user])
+        # if user.save
+        #     session[:user_id] = user.id
+        #     redirect to "/tweets"
+        # else
+        #     redirect to "/signup"
+        # end
+
+        if params[:username] != "" && params[:email] != "" && params[:password] != ""
+            user = User.new(params)
+            if user.save
+              session[:user_id] = user.id
+              redirect to "/tweets"
+              return
+            end
         end
+        redirect to "/signup"
     end
 
     get '/login' do
@@ -39,13 +49,21 @@ class UsersController < ApplicationController
         # log in user and add user_id to session hash
         #redirect_if_logged_in
 
-        user = User.find_by(username: params[:user][:username])
+        # user = User.find_by(username: params[:user][:username])
 
-        if user && user.authenticate(params[:user][:password])
-            session[:user_id] = user.id
-            redirect to "/tweets"
+        # if user && user.authenticate(params[:user][:password])
+        #     session[:user_id] = user.id
+        #     redirect to "/tweets"
+        # else
+        #     redirect to "/login"
+        # end
+        user = User.find_by(:username => params[:username])
+
+        if user && user.authenticate(params[:password])
+          session[:user_id] = user.id 
+          redirect to "/tweets"
         else
-            redirect to "/login"
+          redirect to "/signup"
         end
     end
 
@@ -53,14 +71,21 @@ class UsersController < ApplicationController
         # redirects to login page
         # if user is not logged in, redirects to login
         # clear session hash
-        redirect_if_not_logged_in
-        erb :'users/logout'
+        # redirect_if_not_logged_in
+        # erb :'users/logout'
+
+        if logged_in?
+            session.delete(:user_id)
+            redirect to "/login"
+        else
+            redirect to '/'
+        end
     end
 
-    post '/logout' do
-        session.delete(:user_id)
-        redirect to "/login"
-    end
+    # post '/logout' do
+    #     session.delete(:user_id)
+    #     redirect to "/login"
+    # end
 
     get '/users/:slug' do
         # shows all of the user's tweets
